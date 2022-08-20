@@ -13,38 +13,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home.index');
-})->name("home.index");
-
-Route::get('/contact',function(){
-    return view("home.contact");
-})->name("home.contact");
-
 $posts=[
     1=>[
+        "id"=>1,
         "title"=>"first post",
-        "description"=>"First post description"
+        "description"=>"First post description",
+        "is_new"=>true,
+        'has_comments'=>true,
     ],
     2=>[
+        "id"=>2,
         "title"=>"second post",
-        "description"=>"Second post description"
+        "description"=>"Second post description",
+        "is_new"=>true,
     ],
     3=>[
+        "id"=>3,
         "title"=>"third post",
-        "description"=>"Third post description"
+        "description"=>"Third post description",
+        'has_comments'=>false,
     ],
 ];
 
+Route::view('/', 'home.index')->name("home.index");
+
+Route::view('/contact','home.contact')->name("home.contact");
+
+
 Route::get('/posts',function() use ($posts) {
-    return $posts;
+    return view('posts.index',compact('posts'));
 })->name("posts.index");
 
-Route::get('/posts/{id}',function($id) use ($posts){
 
+Route::get('/posts/{id}',function($id) use ($posts){
     if(!array_key_exists($id,$posts)){
         return abort(404);
     }
-
     return view('posts.show',['post'=>$posts[$id]]);
 })->name('posts.show');
